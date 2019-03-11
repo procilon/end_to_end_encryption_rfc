@@ -11,18 +11,22 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
 import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.util.encoders.Hex;
 import org.nextcloud.e2ee.NextcloudE2E.DecryptedMetadata;
 import org.nextcloud.e2ee.NextcloudE2E.EncryptedMetadata;
 import org.nextcloud.e2ee.NextcloudE2E.FileMetadata;
 import org.nextcloud.e2ee.NextcloudE2E.Metadata;
 import org.nextcloud.e2ee.NextcloudE2E.PrivateKeyData;
 import org.nextcloud.e2ee.NextcloudE2E.Recipient;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Scribble
 {
@@ -62,7 +66,11 @@ public class Scribble
         metadata.recipients.add( recipient );
         metadata.metadata = encryptedMetadata;
         
+        System.out.println( "metadata.json: " + new ObjectMapper().writeValueAsString( metadata ) );
+        
         PrivateKeyData encryptedPrivateKey = encryptPrivateKey( keyPair.getPrivate(), mnemonic );
+        System.out.println( "keydata.json: " + new ObjectMapper().writeValueAsString( encryptedPrivateKey ) );
+        System.out.println( "certificate (base64): " + Base64.getEncoder().encodeToString( x509.getEncoded() ) );
         
         // decryption
         PrivateKey privateKey = decryptPrivateKey( encryptedPrivateKey, mnemonic );
@@ -75,6 +83,9 @@ public class Scribble
         FileMetadata fileMeta = meta.files.get( fileid );
         plainFile = new File( "/tmp/plain.txt" );
         decryptFile( fileMeta, encFile, plainFile );
+        
+        System.out.println( "fid: " + fileid );
+        System.out.println( "encrypted data (hex): " + Hex.toHexString( Files.readAllBytes( encFile.toPath() ) ) );
         
         Files.lines( plainFile.toPath() ).forEach( System.out::println );
     }

@@ -200,7 +200,7 @@ public class NextcloudE2E
      */
     public static SecretKey unwrapMetadataKey( PrivateKey key, byte[] ciphertext ) throws GeneralSecurityException
     {
-        Cipher rsa = Cipher.getInstance( RSA_OAEP );
+        Cipher rsa = Cipher.getInstance( RSA_OAEP, BC );
         rsa.init( Cipher.UNWRAP_MODE, key );
         
         return (SecretKey) rsa.unwrap( ciphertext, "AES", Cipher.SECRET_KEY );
@@ -221,7 +221,7 @@ public class NextcloudE2E
      */
     public static byte[] wrapMetadataKey( PublicKey key, SecretKey metadataKey ) throws GeneralSecurityException
     {
-        Cipher rsa = Cipher.getInstance( RSA_OAEP );
+        Cipher rsa = Cipher.getInstance( RSA_OAEP, BC );
         rsa.init( Cipher.WRAP_MODE, key );
         
         return rsa.wrap( metadataKey );

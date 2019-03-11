@@ -44,7 +44,7 @@ public class DecryptTestData
         }
         
         String mnemonic = "quarter plate lunch sick stone height canvas key scatter trust copper labor";
-        String fileid = "9d8a60ba240e4163a32b0438d7cbc884";
+        String fileid = "a5604b31c1fd43229229e1af8118d849";
         PrivateKeyData privateKeyData = json.readValue( new File( "src/test/resources/keydata.json" ), PrivateKeyData.class );
         
         PrivateKey privateKey = decryptPrivateKey( privateKeyData, mnemonic );
